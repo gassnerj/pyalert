@@ -2,6 +2,9 @@
 
 from jinja2 import Environment, PackageLoader, select_autoescape
 from alert import Alert
+import cgi
+import cgitb
+cgitb.enable()
 
 env = Environment(
     loader=PackageLoader('alert', 'templates'),
@@ -15,5 +18,6 @@ parJson = alerts.requestJSON()
 template = env.get_template('thon.html')
 
 title = "Home"
-
+print ("Content-Type: text/html\n")
+print ("\n")
 print(template.render(title=title, items=parJson))
