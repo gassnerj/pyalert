@@ -3,12 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ title }}</title>
+	<script type="text/javascript" src="resources/jquery-3.2.1.min.js"></script>
+	<script type="text/javascript" src="resources/alert.js"></script>
+	<script src="https://cdn.rawgit.com/vast-engineering/jquery-popup-overlay/1.7.13/jquery.popupoverlay.js"></script>
+	<script type="text/javascript" src="resources/push.js"></script>
+	<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBv0m_yJ02CB1WKBXG-a2bixJ1OIonYYBI&callback=initMap" asyncdefer></script> -->
+	<link rel="stylesheet" type="text/css" href="resources/style.css">
 </head>
 <body>
-<ul>
-{% for item in items %}
-    <li id="{{ item.properties.id|e }}">{{ item.properties.headline|e }}</li>
-{% endfor %}
-</ul>
+
+	<div class="container">
+		<div class="header"></div>
+		<div class="menu"></div>
+		<div class="left">
+			<button id="testing">TEST</button>
+			<h4>
+        		States:
+    		</h4>
+			<select name="state" id="state">
+				<option value="ALL" selected="selected">Entire US</option>
+				<option value="AL">Alabama</option>
+				<option value="AK">Alaska</option>
+				<option value="AZ">Arizona</option>
+				<option value="AR">Arkansas</option>
+				<option value="CA">California</option>
+				<option value="CO">Colorado</option>
+				<option value="CT">Connecticut</option>
+				<option value="DE">Delaware</option>
+				<option value="DC">District Of Columbia</option>
+				<option value="FL">Florida</option>
+				<option value="GA">Georgia</option>
+				<option value="HI">Hawaii</option>
+				<option value="ID">Idaho</option>
+				<option value="IL">Illinois</option>
+				<option value="IN">Indiana</option>
+				<option value="IA">Iowa</option>
+				<option value="KS">Kansas</option>
+				<option value="KY">Kentucky</option>
+				<option value="LA">Louisiana</option>
+				<option value="ME">Maine</option>
+				<option value="MD">Maryland</option>
+				<option value="MA">Massachusetts</option>
+				<option value="MI">Michigan</option>
+				<option value="MN">Minnesota</option>
+				<option value="MS">Mississippi</option>
+				<option value="MO">Missouri</option>
+				<option value="MT">Montana</option>
+				<option value="NE">Nebraska</option>
+				<option value="NV">Nevada</option>
+				<option value="NH">New Hampshire</option>
+				<option value="NJ">New Jersey</option>
+				<option value="NM">New Mexico</option>
+				<option value="NY">New York</option>
+				<option value="NC">North Carolina</option>
+				<option value="ND">North Dakota</option>
+				<option value="OH">Ohio</option>
+				<option value="OK">Oklahoma</option>
+				<option value="OR">Oregon</option>
+				<option value="PA">Pennsylvania</option>
+				<option value="RI">Rhode Island</option>
+				<option value="SC">South Carolina</option>
+				<option value="SD">South Dakota</option>
+				<option value="TN">Tennessee</option>
+				<option value="TX">Texas</option>
+				<option value="UT">Utah</option>
+				<option value="VT">Vermont</option>
+				<option value="VA">Virginia</option>
+				<option value="WA">Washington</option>
+				<option value="WV">West Virginia</option>
+				<option value="WI">Wisconsin</option>
+				<option value="WY">Wyoming</option>
+			</select>
+			<br />
+			<br />
+			<h4>
+        		County/Area:
+    		</h4>
+			<select name="counties" id="counties">
+				<option>----</option>
+			</select>
+			<br />
+			<br />
+			<label><strong>Show</strong></label>
+			<br />
+			<br />
+			<label>Flood Warnings</label>
+			<input type="checkbox" id="fwchbx" />
+			<br />
+			<label>Flash Flood Warnings</label>
+			<input type="checkbox" id="ffwchbx" />
+			<br />
+			<label>Special Weather Statements</label>
+			<input type="checkbox" id="swschbx" />
+			<br />
+		</div>
+		<div class="right">
+			<h1 id="title">{{ items.title|e }}</h1>
+            <ul id="alerts">
+            {% for item in items %}
+                <li id="{{ item.properties.id|e }}" class="my_popup_open">{{ item.properties.headline|e }}</li>
+            {% endfor %}
+            </ul>
+		</div>
+		<div class="footer"></div>
+	</div>
+	<div id="my_popup">
+
+			<h1 id="alertHeadline"></h1>
+			<p id="alertDescription"></p>
+			<table id="params">
+				<tbody>
+					<tr>
+						<td>Wind Speed</td>
+						<td id="windGust"></td>
+					</tr>
+					<tr>
+						<td>Hail Size</td>
+						<td id="hailSize"></td>
+					</tr>
+				</tbody>
+			</table>
+			<h2>Instruction</h2>
+			<p id="alertResponse"></p>
+			<button class="my_popup_close">Close</button>
+
+	</div>
+
+	<div id="alert_message " style="display:none;">
+
+	</div>
 </body>
 </html>

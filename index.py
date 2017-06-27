@@ -11,13 +11,13 @@ env = Environment(
     autoescape=select_autoescape(['html', 'xml'])
 )
 
-alerts = Alert("https://api.weather.gov/alerts/active/area/TX")
+alerts = Alert("https://api.weather.gov/alerts/active/")
 
 parJson = alerts.requestJSON()
 
 template = env.get_template('thon.html')
 
 title = "Home"
-print ("Content-Type: text/html\n")
-print ("\n")
+print ("Content-Type: text/html")
+print ("")
 print(template.render(title=title, items=parJson))

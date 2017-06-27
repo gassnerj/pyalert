@@ -23,3 +23,5 @@ class Alert(object):
     def printJSON(self):
         parsedJson = self.requestJSON()
         print (json.dumps(parsedJson, indent=4, sort_keys=True))
+        
+    
