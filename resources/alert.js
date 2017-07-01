@@ -193,43 +193,55 @@ var Alert = {
 		eraseCookie('loaded');
 	},
 
-	mkTableArray: function() {
+	mkTableArray: function(mode) {
 		var myTableArray = [];
+		var arrayOfThisRow = [];
 		$("#alerts").each(function() {
-			var arrayOfThisRow = [];
+			
 			var tableData = $(this).find('li');
 			if (tableData.length > 0) {
 				tableData.each(function() {
-					arrayOfThisRow.push($(this).attr("id"));
+					if (mode == "checkid") {
+						arrayOfThisRow.push($(this).attr("id"));
+					} else if (mode == "checkexpiry") {
+						arrayOfThisRow.push($(this).attr("expiration"));
+					} else if (mode == "news") {
+						if ($(this).hasClass("new")) {
+							arrayOfThisRow.push($(this).attr("id"))
+						}
+					}
 				});
 				myTableArray.push(arrayOfThisRow);
 			}
 		});
 		var myJson = JSON.stringify(myTableArray);
-		return myJson;
+		
+		if (mode == "checkid") {
+			return myJson;
+		} else if (mode == "checkexpiry") {
+			return arrayOfThisRow;
+		} else if (mode == "news") {
+			return arrayOfThisRow;
+		}
 	},
 
 	expireAlerts: function() {
 		var curTime = Date.parse(Date());
-		var myTableArray = this.mkTableArray();
+		var myTableArray = this.mkTableArray("checkexpiry");
 		for (i = 0; i < myTableArray.length; i++) {
-			var expiry = myTableArray[i];
-			for (y = 0; y < expiry.length; y++) {
-				var exp = expiry[y];
-				if (exp < curTime) {
-					var searchString = exp;
-					try {
-						var selector1 = "[expiration="+exp+"]";
-							$(selector1).each(function() {
-									$(this).fadeOut(2000);
-							});
-					} catch (err) {
-						//do nothing
-					}
-
+			var expiry = Date.parse(myTableArray[i]);
+			if (expiry < curTime) {
+				var searchString = expiry;
+				try {
+					var selector1 = "[expiration="+expiry+"]";
+						$(selector1).each(function() {
+								$(this).fadeOut(2000);
+						});
+				} catch (err) {
+					//do nothing
 				}
-			}
 
+			}
 		}
 	},
 
@@ -301,10 +313,31 @@ function clearExpiredFromHidden() {
 }
 
 function fetchNewAlerts() {
-	data = Alert.mkTableArray();
+	data = Alert.mkTableArray("checkid");
+
 	$.post( "fetchNew.py", {data}, function(data) {
 		$("#alerts").prepend(data);
 		$(".new").hide().fadeIn(1000);
+		var news = Alert.mkTableArray("news");
+		for (i=0; i < news.length; i++) {
+			var id = "#" + news[i];
+			var event = $(id).attr("event");
+			var areaDesc = $(id).attr("areaDesc");
+			if (event != undefined && event == "Tornado Warning" || event == "Severe Thunderstorm Warning") {
+				Push.create(event, {
+					body: "A " + event + " has been issued for " + areaDesc,
+					timeout: 5000,
+					link: "/",
+					onClick: function() {
+						window.focus();
+						this.close();
+					}
+				});
+			}
+		}
+
+		$("li").removeClass("new");
+
 	});
 }
 
@@ -318,9 +351,9 @@ $(document).ready(function() {
 
 	//createCookie('loaded', 'true', 7);
 
-	//setInterval("fetchNewAlerts()", refreshRate);
-	//setInterval("Alert.expireAlerts()", 1000);
-	//setInterval("clearExpiredFromHidden()", 300000);
+	setInterval("fetchNewAlerts()", refreshRate);
+	setInterval("Alert.expireAlerts()", 1000);
+	setInterval("clearExpiredFromHidden()", 300000);
 	
 	
 	

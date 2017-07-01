@@ -16,7 +16,6 @@
 		<div class="header"></div>
 		<div class="menu"></div>
 		<div class="left">
-			<button id="testing">TEST</button>
 			<h4>
         		States:
     		</h4>
@@ -98,39 +97,5 @@
 			<br />
 		</div>
 		<div class="right">
-			<h1 id="title">{{ items.title|e }}</h1>
+			<h1 id="title">{{ h1Title|e }}</h1>
             <ul id="alerts">
-            {% for item in items %}
-                <li id="{{ item.properties.id|e }}" class="my_popup_open">{{ item.properties.headline|e }}</li>
-            {% endfor %}
-            </ul>
-		</div>
-		<div class="footer"></div>
-	</div>
-	<div id="my_popup">
-
-			<h1 id="alertHeadline"></h1>
-			<p id="alertDescription"></p>
-			<table id="params">
-				<tbody>
-					<tr>
-						<td>Wind Speed</td>
-						<td id="windGust"></td>
-					</tr>
-					<tr>
-						<td>Hail Size</td>
-						<td id="hailSize"></td>
-					</tr>
-				</tbody>
-			</table>
-			<h2>Instruction</h2>
-			<p id="alertResponse"></p>
-			<button class="my_popup_close">Close</button>
-
-	</div>
-
-	<div id="alert_message " style="display:none;">
-
-	</div>
-</body>
-</html>

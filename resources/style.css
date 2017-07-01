@@ -19,7 +19,7 @@ body {
 .left {
 	border-right: 1px solid black;
 	float: left;
-	padding-left: 10px;
+	padding: 10px;
 }
 
 .right {
@@ -44,12 +44,12 @@ body {
 #my_popup {
 	width: 500px;
 	height: auto;
-	background-color: #444;
+	background-color: #8b9ab2;
 	border: 3px solid white;
 	border-radius: 5px;
 	padding: 5px;
 	display: none;
-	color: white;
+	color: black;
 }
 
 button.my_popup_close {
@@ -94,6 +94,15 @@ li {
 	border-radius: 5px;
 	text-align: left !important;
 	background-clip: padding-box;
+	font-family: "Avant Garde", Avantgarde, "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+	font-weight:bold;
+	font-size:12pt;
+}
+
+li:hover {
+	background-color: #8b9ab2 !important;
+	color: black !important;
+	cursor:pointer;
 }
 
 li#fr {
@@ -107,13 +116,13 @@ li#fr {
 	width: 0;
 }
 
-li.thunderstorm {
+li.Severe-Thunderstorm-Warning {
 	border: 3px solid black;
 	background-color: yellow;
 	color: black;
 }
 
-li.tornado {
+li.Tornado-Warning {
 	border: 3px solid black;
 	background-color: red;
 }
@@ -122,24 +131,34 @@ li.confirmed {
 	border: 3px solid #e900ff;
 }
 
-li.flood {
+li.Flood-Warning {
 	border: 3px solid green;
 	background-color: green;
 	color: white;
 }
 
-li.tropwarn {
+li.Tropical-Storm-Warning {
 	border: 3px solid black;
 }
 
-li.severewatch {
+li.Severe-Thunderstorm-Watch {
 	border: 3px solid yellow;
 	background-color: black;
 }
 
-li.torwatch {
+li.Tornado-Watch {
 	border: 3px solid red;
 	background-color: black;
+}
+
+span.area {
+	font-size:8pt;
+	font-weight:normal;
+}
+
+span.state {
+	font-size:10pt;
+	font-weight:normal;
 }
 
 tr img {

@@ -1,1 +1,4 @@
-<li class='new'>{{ item.properties.event }}</li>
+
+
+<li id="{{ ids|e }}" expiration="{{ expires }}" class="my_popup_open {{ cssClass|replace(" ", "-") }} {% if new %}{{ new }}{% endif %}" event="{{event}}" areaDesc="{{areaDesc}}">{{ event|e }}<br /><span class="state">{{ state|e }}</span><br /><span class="area">{{areaDesc}}</span></li>
+
