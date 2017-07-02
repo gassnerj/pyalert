@@ -35,6 +35,8 @@ env = Environment(
 
 template = env.get_template('newAlerts.html')
 
+evs = ['Severe Thunderstorm Warning', 'Tornado Warning', 'Flash Flood Warning']
+
 for feature in nwsJson:
 	if feature['properties']['id'] not in myId:
 		ids = feature['properties']['id']
@@ -43,7 +45,9 @@ for feature in nwsJson:
 		expires = feature['properties']['expires']
 		areaDesc = feature['properties']['areaDesc']
 		geoCodes = feature['properties']['geocode']['UGC']
-		
-		states = alerts.getZones(geoCodes)
-		if event != "Test Message":
-			print(template.render(ids=ids, cssClass=event, headline=headline, expires=expires, areaDesc=areaDesc, event=event, new="new"))
+		for myevent in evs:
+			if myevent == event:
+				states = alerts.getZones(geoCodes)
+				print(template.render(ids=ids, cssClass=event, headline=headline, expires=expires, areaDesc=areaDesc, event=event, new="new", state=states))
+			else:
+				pass

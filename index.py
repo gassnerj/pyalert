@@ -15,6 +15,8 @@ alerts = Alert("https://api.weather.gov/alerts/active/")
 
 parJson = alerts.requestJSON()
 
+
+
 h1Title = "Watches, warnings, and advisories"
 
 template_header = env.get_template('thon.html')
@@ -25,10 +27,10 @@ template_footer = env.get_template("footer.html")
 
 title = "Thunder Chasers Alerts - Home"
 
-
-
 print ("Content-Type: text/html")
 print ()
+
+evs = ['Severe Thunderstorm Warning', 'Tornado Warning', 'Flash Flood Warning', 'Special Weather Statement']
 
 print(template_header.render(title=title))
 
@@ -41,16 +43,16 @@ for feature in parJson:
 	areaDesc = feature['properties']['areaDesc']
 	geoCodes = feature['properties']['geocode']['UGC']
 
-	states = alerts.getZones(geoCodes)
-	
-	
 
 
-	if event != "Test Message":
-		print(template_content.render(ids=ids, cssClass=event, headline=headline, expires=expires, areaDesc=areaDesc, event=event, state=states))
-
-
-
-
+	for myevent in evs:
+		if myevent == event:
+			states = alerts.getZones(geoCodes)
+			states = str(states)
+			states = states.strip("[]")
+			states = states.replace("'", "")
+			print(template_content.render(ids=ids, cssClass=event, headline=headline, expires=expires, areaDesc=areaDesc, event=event, state=states))
+		else:
+			pass
 
 print(template_footer.render())
