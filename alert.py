@@ -5,12 +5,12 @@ import os
 import requests
 
 
-
-
 class Alert(object):
 	"""A class to retrieve data from the NWS Weather API."""
+
 	def __init__(self, url):
 		self.url = url
+		self.evs = ['Severe Thunderstorm Warning', 'Tornado Warning', 'Flash Flood Warning']
 
 	def requestJSON(self):
 		url = self.url
@@ -33,6 +33,12 @@ class Alert(object):
 	def printJSON(self):
 		parsedJson = self.requestJSON()
 		print(json.dumps(parsedJson, indent = 4, sort_keys = True))
+
+	def format_states(self, states):
+		states = str(states)
+		states = states.strip("[]")
+		states = states.replace("'", "")
+		return states
 
 	def getState(self, geoCode):
 		us_state_abbrev = {

@@ -229,11 +229,11 @@ var Alert = {
 		var curTime = Date.parse(Date());
 		var myTableArray = this.mkTableArray("checkexpiry");
 		for (i = 0; i < myTableArray.length; i++) {
-			var expiry = Date.parse(myTableArray[i]);
+			expiry = Date.parse(myTableArray[i]);
 			if (expiry < curTime) {
 				var searchString = expiry;
 				try {
-					var selector1 = "[expiration="+expiry+"]";
+					var selector1 = "[expiration=\""+myTableArray[i]+"\"]";
 						$(selector1).each(function() {
 								$(this).fadeOut(2000);
 						});

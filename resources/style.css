@@ -137,6 +137,12 @@ li.Flood-Warning {
 	color: white;
 }
 
+li.Flash-Flood-Warning {
+    border:3px solid #00ff19;
+    background-color: green;
+    color: white;
+}
+
 li.Tropical-Storm-Warning {
 	border: 3px solid black;
 }

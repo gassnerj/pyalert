@@ -30,8 +30,6 @@ title = "Thunder Chasers Alerts - Home"
 print ("Content-Type: text/html")
 print ()
 
-evs = ['Severe Thunderstorm Warning', 'Tornado Warning', 'Flash Flood Warning', 'Special Weather Statement']
-
 print(template_header.render(title=title))
 
 states = []
@@ -43,14 +41,10 @@ for feature in parJson:
 	areaDesc = feature['properties']['areaDesc']
 	geoCodes = feature['properties']['geocode']['UGC']
 
-
-
-	for myevent in evs:
+	for myevent in alerts.evs:
 		if myevent == event:
 			states = alerts.getZones(geoCodes)
-			states = str(states)
-			states = states.strip("[]")
-			states = states.replace("'", "")
+			states = alerts.format_states(states)
 			print(template_content.render(ids=ids, cssClass=event, headline=headline, expires=expires, areaDesc=areaDesc, event=event, state=states))
 		else:
 			pass
