@@ -1,4 +1,60 @@
 
 
-<li id="{{ ids|e }}" expiration="{{ expires }}" class="my_popup_open {{ cssClass|replace(" ", "-") }} {% if new %}{{ new }}{% endif %}" event="{{event}}" areaDesc="{{areaDesc}}">{{ event|e }}<br /><span class="state">{{ state|e }}</span><br /><span class="area">{{areaDesc}}</span></li>
+<li id="{{ ids|e }}" onclick="initMap{{ i }}()" expiration="{{ expires }}" coords="{{ coords }}" class="my_popup_open {{ cssClass|replace(" ", "-") }} {% if new %}{{ new }}{% endif %}" event="{{event}}" areaDesc="{{areaDesc}}">{{ event|e }}<br /><span class="state">{{ state|e }}</span><br /><span class="area">{{areaDesc}}</span></li>
 
+{% autoescape false %}
+      <script>
+      function initMap{{ i }}(center, coords, color) {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 4,
+          center: {lat: 34.10, lng: -102.5},
+          mapTypeId: 'terrain'
+        });
+
+        
+        var flightPath = new google.maps.Polygon({
+          paths: [{{ coords }}],
+          strokeColor: {{ color }},
+          strokeOpacity: 0.8,
+          strokeWeight: 3,
+          fillColor: {{ color }},
+          fillOpacity: 0.35
+        });
+        flightPath.setMap(map);
+        flightPath.addListener('click', showArrays);
+
+	      function showArrays(event) {
+
+
+	        var contentString = `
+	        {{ event|e }}
+	        <br /><br />
+	        {{ description|e }}
+	        <br /><br />
+	        {{ instruction|e }}
+	        `;
+	
+
+	        infoWindow.setContent(contentString);
+	        infoWindow.setPosition(event.latLng);
+	
+	        infoWindow.open(map);
+	      }
+        
+        var paths = flightPath.getPaths();
+        var bounds = new google.maps.LatLngBounds();
+		var path;
+	    for (var i = 0; i < paths.getLength(); i++) {
+	        path = paths.getAt(i);
+	        for (var ii = 0; ii < path.getLength(); ii++) {
+	            bounds.extend(path.getAt(ii));
+	        }
+	    }
+        map.fitBounds(bounds);
+        
+        infoWindow = new google.maps.InfoWindow;
+        
+      }
+      </script>
+
+{% endautoescape %}

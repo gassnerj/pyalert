@@ -10,7 +10,7 @@ class Alert(object):
 
 	def __init__(self, url):
 		self.url = url
-		self.evs = ['Severe Thunderstorm Warning', 'Tornado Warning', 'Flash Flood Warning']
+		self.evs = ['Severe Thunderstorm Warning', 'Tornado Warning', 'Flash Flood Warning', 'Severe Thunderstorm Watch', 'Tornado Watch', 'Flood Warning']
 
 	def requestJSON(self):
 		url = self.url
@@ -20,7 +20,7 @@ class Alert(object):
 			parsedJson = data['features']
 			return parsedJson
 		else :
-			parsedJson = data['properties']
+			parsedJson = data
 			return parsedJson
 	def filterJSON(self, jsonString, events):
 		for feature in jsonString:

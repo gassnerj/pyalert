@@ -31,168 +31,6 @@ function eraseCookie(name) {
 
 var Alert = {
 
-	loadDoc: function(url) {
-
-		var xhttp = new XMLHttpRequest();
-		var x;
-		var alertObj;
-		var i;
-		var n = 0;
-		var table = document.getElementById("alerts");
-		var curTime = Date.parse(Date());
-		xhttp.onreadystatechange = function() {
-			if (this.readyState == 4 && this.status == 200) {
-				alertObj = JSON.parse(this.responseText);
-				document.getElementById("title").innerHTML = alertObj['title'];
-				for (i = 0; i < alertObj.features.length; i++) {
-					x = alertObj.features[i];
-					var alertID = x['properties'].id;
-					var expiry = Date.parse(x['properties'].expires);
-					var status = x['properties'].status;
-					var event = x['properties'].event;
-					var areaDesc = x['properties'].areaDesc;
-					var torDetect = x['properties']['parameters'].tornadoDetection;
-					var a_p = "";
-					var d = new Date(expiry);
-					var curr_hour = d.getHours();
-					var curr_day = d.getDate();
-					var curr_month = d.getMonth();
-					curr_month++;
-					var curr_year = d.getFullYear();
-					
-					var until = x['properties'].expires;
-					var ck = readCookie('loaded');
-
-
-					var selector = "#alerts";
-
-
-					if (curr_hour < 12) {
-						a_p = "AM";
-					} else {
-						a_p = "PM";
-					}
-					if (curr_hour == 0) {
-						curr_hour = 12;
-					}
-					if (curr_hour > 12) {
-						curr_hour = curr_hour - 12;
-					}
-					var curr_min = d.getMinutes();
-					curr_min = curr_min + "";
-					if (curr_min.length == 1) {
-						curr_min = "0" + curr_min;
-					}
-					var expireText = " until " + curr_month + "/" + curr_day + "/" + curr_year + " at " + curr_hour + ":" + curr_min + " " + a_p;
-					
-					if (document.getElementById(alertID)) {
-						//do nothing
-					} else {
-						switch (event) {
-							case "Severe Thunderstorm Warning":
-								if (ck == true) {
-									$(selector).prepend('<li id="' + alertID + '" class="my_popup_open thunderstorm" expiration="' + expiry + '"><strong>' + event + '</strong> for ' + areaDesc + ' ' + expireText + '</li>').hide().fadeIn(1000);
-									Push.create("Severe Thunderstorm Warning!", {
-										body: "A severe thunderstorm warning has been issued for " + areaDesc,
-										requireInteraction: true,
-										link: "/",
-										onClick: function() {
-											window.focus();
-											this.close();
-										}
-									});
-								} else {
-									$(selector).append('<li id="' + alertID + '" class="my_popup_open thunderstorm" expiration="' + expiry + '"><strong>' + event + '</strong> for ' + areaDesc + ' ' + expireText + '</li>').hide().fadeIn(1000);
-
-								}
-								break;
-							case "Tornado Warning":
-								if (ck == true) {
-									if (torDetect == "RADAR INDICATED") {
-										var torClass = "tornado";
-									} else if (torDetect == "SPOTTER INDICATED") {
-										var torClass = "confirmed";
-									}
-									$(selector).prepend('<li id="' + alertID + '" class="my_popup_open '+torClass+'" expiration="' + expiry + '"><strong>' + event + '</strong> for ' + areaDesc + ' ' + expireText + '</li>').hide().fadeIn(1000);
-									Push.create("Tornado Warning!", {
-										body: "A tornado warning has been issued for " + areaDesc,
-										requireInteraction: true,
-										link: "/",
-										vibrate: [100, 100, 100],
-										onClick: function() {
-											window.focus();
-											this.close();
-										}
-									});
-								} else {
-									$(selector).append('<li id="' + alertID + '" class="my_popup_open tornado" expiration="' + expiry + '"><strong>' + event + '</strong> for ' + areaDesc + ' ' + expireText + '</li>').hide().fadeIn(1000);
-
-								}
-								break;
-							case "Severe Thunderstorm Watch":
-								if (ck == true) {
-									$(selector).prepend('<li id="' + alertID + '" class="my_popup_open severewatch" expiration="' + expiry + '"><strong>' + event + '</strong> for ' + areaDesc + ' ' + expireText + '</li>').hide().fadeIn(1000);
-
-								} else {
-									$(selector).append('<li id="' + alertID + '" class="my_popup_open severewatch" expiration="' + expiry + '"><strong>' + event + '</strong> for ' + areaDesc + ' ' + expireText + '</li>').hide().fadeIn(1000);
-
-								}
-								break;
-							case "Tornado Watch":
-								if (ck == true) {
-									$(selector).prepend('<li id="' + alertID + '" class="my_popup_open torwatch" expiration="' + expiry + '"><strong>' + event + '</strong> for ' + areaDesc + ' ' + expireText + '</li>').hide().fadeIn(1000);
-
-								} else {
-									$(selector).append('<li id="' + alertID + '" class="my_popup_open torwatch" expiration="' + expiry + '"><strong>' + event + '</strong> for ' + areaDesc + ' ' + expireText + '</li>').hide().fadeIn(1000);
-								}
-								break;
-							case "Tropical Storm Warning":
-								if (ck == true) {
-									$(selector).prepend('<li id="' + alertID + '" class="my_popup_open tropwarn" expiration="' + expiry + '"><strong>' + event + '</strong> for ' + areaDesc + ' ' + expireText + '</li>').hide().fadeIn(1000);
-
-								} else {
-									$(selector).append('<li id="' + alertID + '" class="my_popup_open tropwarn" expiration="' + expiry + '"><strong>' + event + '</strong> for ' + areaDesc + ' ' + expireText + '</li>').hide().fadeIn(1000);
-
-								}
-								break;
-							case "Flood Warning":
-								if ($("#fwchbx").is(':checked')) {} else {
-									$(".fw").remove();
-								}
-								break;
-							case "Special Weather Statement":
-								if (document.getElementById("swschbx").checked) {} else {
-									$(".sps").remove();
-								}
-								break;
-							case "Test Message":
-								break;
-							default:
-								if (ck == true) {
-									$(selector).prepend('<li id="' + alertID + '" class="my_popup_open" expiration="' + expiry + '"><strong>' + event + '</strong> for ' + areaDesc + ' ' + expireText + '</li>').hide().fadeIn(1000);
-									Push.create(event, {
-										body: "A " + event + " has been issued for " + areaDesc,
-										timeout: 5000,
-										link: "/",
-										onClick: function() {
-											window.focus();
-											this.close();
-										}
-									});
-								} else {
-									$(selector).append('<li id="' + alertID + '" class="my_popup_open" expiration="' + expiry + '"><strong>' + event + '</strong> for ' + areaDesc + ' ' + expireText + '</li>').hide().fadeIn(1000);
-
-								}
-						}
-					}
-				}
-			}
-		};
-		xhttp.open("GET", url, true);
-		xhttp.send();
-		eraseCookie('loaded');
-	},
-
 	mkTableArray: function(mode) {
 		var myTableArray = [];
 		var arrayOfThisRow = [];
@@ -342,10 +180,11 @@ function fetchNewAlerts() {
 }
 
 $(document).ready(function() {
-	
+
+	initMap();
 	$("#testing").click(function() {
 		fetchNewAlerts();
-	})
+	});
 	
 	//Alert.loadDoc(url);
 
@@ -357,11 +196,18 @@ $(document).ready(function() {
 	
 	
 	
-	$('#my_popup').popup();
+	//$('#my_popup').popup();
 	
 	$("#alerts").on("click", ">li", function(){
 	    var passThis = $(this).attr('id');
+	    var coords = $(this).attr('coords');
+	    var center = $(this).attr('center');
+	    var color = $(this).attr('color');
 	    Alert.loadDetails(passThis);
+	    
+
+	    
+
 	});
 	
 	$('#state').on('change', function() {
@@ -433,45 +279,3 @@ function loadCounties(state) {
 }
 
 
-/*function initMap() {
-  var map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 5,
-    center: {
-      lat: 48.75,
-      lng: -108.26
-    },
-    mapTypeId: 'terrain'
-  });
-
-  var flightPlanCoordinates = [{
-    lng: -108.26,
-    lat: 48.75
-  }, {
-    lng: -108.32,
-    lat: 48.74
-  }, {
-    lng: -108.35,
-    lat: 48.44
-  }, {
-    lng: -108.42,
-    lat: 48.44
-  }, {
-    lng: -108.43,
-    lat: 48.98
-  }, {
-    lng: -108.6,
-    lat: 47.99
-  }, {
-    lng: -108.64,
-    lat: 47.92
-  }];
-  var flightPath = new google.maps.Polyline({
-    path: flightPlanCoordinates,
-    geodesic: true,
-    strokeColor: '#FF0000',
-    strokeOpacity: 1.0,
-    strokeWeight: 2
-  });
-
-  flightPath.setMap(map);
-}*/
